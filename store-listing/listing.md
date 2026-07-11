@@ -99,8 +99,8 @@ Cleanor QR Code Generator has a single purpose: to generate a QR code locally in
 ## Assets checklist
 
 - [x] **Icon 128×128** (`icons/icon-128.png`) — the detailed Cleanor QR icon (blue tile, white QR + card). Toolbar sizes (16/32/48) use a simplified, legible QR-mark of the same brand.
-- [ ] **Screenshots 1280×800** (min 1, up to 5) — still to make. Suggested set: (1) QR of the current page, (2) Wi-Fi type with the "open full tool on cleanor.app" link, (3) a styled/gradient QR with a template picked, (4) the Customize panel with colors + logo, (5) dark mode. Capture from the popup at 380px, scaled up on a clean background.
-- [ ] Small promo tile 440×280 (optional).
+- [x] **Screenshots 1280×800** (5) in `store-listing/png/screenshot-1..5.png` — (1) QR of the current page, (2) Wi-Fi, (3) Contact/vCard, (4) styled QR + Customize, (5) dark mode. 24-bit PNG, no alpha (CWS-ready).
+- [ ] Small promo tile 440×280 (optional — not required to publish).
 
 ## Security review
 
