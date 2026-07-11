@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="popup.css" />
+    <title>Cleanor QR</title>
+  </head>
+  <body>
+    <header class="head">
+      <div class="brand">
+        <img src="icons/icon-32.png" width="20" height="20" alt="" />
+        <span>Cleanor QR</span>
+      </div>
+      <span id="srcTag" class="src-tag" hidden></span>
+    </header>
+
+    <main class="main">
+      <!-- Preview (top, hero) -->
+      <div class="qr-wrap">
+        <div class="qr-card" id="qrCard"><canvas id="canvas" width="240" height="240" aria-label="QR code preview"></canvas></div>
+        <p id="hint" class="hint"></p>
+      </div>
+
+      <!-- Content type -->
+      <div class="pills" id="typePills" role="tablist" aria-label="QR content type">
+        <button class="pill is-active" data-type="text" type="button">Text</button>
+        <button class="pill" data-type="wifi" type="button">Wi-Fi</button>
+        <button class="pill" data-type="email" type="button">Email</button>
+        <button class="pill" data-type="phone" type="button">Phone</button>
+        <button class="pill" data-type="sms" type="button">SMS</button>
+        <button class="pill" data-type="contact" type="button">Contact</button>
+        <button class="pill" data-type="whatsapp" type="button">WhatsApp</button>
+        <button class="pill" data-type="geo" type="button">Location</button>
+        <button class="pill" data-type="event" type="button">Event</button>
+      </div>
+
+      <!-- Field groups (one visible per type) -->
+      <section class="fields" data-group="text">
+        <label class="field"><span class="label">Text or link</span>
+          <textarea id="f-text" rows="2" placeholder="Type or paste anything — a URL, a note…" spellcheck="false"></textarea></label>
+        <button id="typeSuggest" class="suggest" type="button" hidden></button>
+      </section>
+
+      <section class="fields" data-group="wifi" hidden>
+        <label class="field"><span class="label">Network name (SSID)</span>
+          <input id="f-ssid" type="text" placeholder="MyWiFi" /></label>
+        <div class="row">
+          <label class="field"><span class="label">Password</span>
+            <input id="f-pass" type="text" placeholder="••••••••" /></label>
+          <label class="field field-narrow"><span class="label">Security</span>
+            <select id="f-enc">
+              <option value="WPA" selected>WPA/WPA2</option>
+              <option value="WEP">WEP</option>
+              <option value="nopass">None</option>
+            </select></label>
+        </div>
+      </section>
+
+      <section class="fields" data-group="email" hidden>
+        <label class="field"><span class="label">To</span>
+          <input id="f-email-to" type="email" placeholder="name@example.com" /></label>
+        <label class="field"><span class="label">Subject</span>
+          <input id="f-email-subject" type="text" placeholder="Optional" /></label>
+        <label class="field"><span class="label">Message</span>
+          <textarea id="f-email-body" rows="2" placeholder="Optional"></textarea></label>
+      </section>
+
+      <section class="fields" data-group="phone" hidden>
+        <label class="field"><span class="label">Phone number</span>
+          <input id="f-phone" type="tel" placeholder="+1 555 123 4567" /></label>
+      </section>
+
+      <section class="fields" data-group="sms" hidden>
+        <label class="field"><span class="label">Phone number</span>
+          <input id="f-sms-number" type="tel" placeholder="+1 555 123 4567" /></label>
+        <label class="field"><span class="label">Message</span>
+          <textarea id="f-sms-message" rows="2" placeholder="Optional"></textarea></label>
+      </section>
+
+      <section class="fields" data-group="contact" hidden>
+        <label class="field"><span class="label">Full name</span>
+          <input id="f-c-name" type="text" placeholder="Jane Doe" /></label>
+        <div class="row">
+          <label class="field"><span class="label">Phone</span>
+            <input id="f-c-phone" type="tel" placeholder="+1 555 123 4567" /></label>
+          <label class="field"><span class="label">Email</span>
+            <input id="f-c-email" type="email" placeholder="jane@example.com" /></label>
+        </div>
+        <label class="field"><span class="label">Organization</span>
+          <input id="f-c-org" type="text" placeholder="Optional" /></label>
+        <label class="field"><span class="label">Website</span>
+          <input id="f-c-url" type="text" placeholder="Optional" /></label>
+      </section>
+
+      <section class="fields" data-group="whatsapp" hidden>
+        <label class="field"><span class="label">Phone number (with country code)</span>
+          <input id="f-wa-number" type="tel" placeholder="15551234567" /></label>
+        <label class="field"><span class="label">Message</span>
+          <textarea id="f-wa-message" rows="2" placeholder="Optional pre-filled text"></textarea></label>
+      </section>
+
+      <section class="fields" data-group="geo" hidden>
+        <div class="row">
+          <label class="field"><span class="label">Latitude</span>
+            <input id="f-geo-lat" type="text" inputmode="decimal" placeholder="40.71872" /></label>
+          <label class="field"><span class="label">Longitude</span>
+            <input id="f-geo-lon" type="text" inputmode="decimal" placeholder="-73.98905" /></label>
+        </div>
+      </section>
+
+      <section class="fields" data-group="event" hidden>
+        <label class="field"><span class="label">Title</span>
+          <input id="f-ev-title" type="text" placeholder="Team meetup" /></label>
+        <label class="opt"><input id="f-ev-allday" type="checkbox" /> <span>All-day event</span></label>
+        <label class="field"><span class="label">Starts</span>
+          <input id="f-ev-start" type="datetime-local" /></label>
+        <label class="field"><span class="label">Ends</span>
+          <input id="f-ev-end" type="datetime-local" /></label>
+        <label class="field"><span class="label">Location</span>
+          <input id="f-ev-location" type="text" placeholder="Optional" /></label>
+        <label class="field"><span class="label">Notes</span>
+          <textarea id="f-ev-desc" rows="2" placeholder="Optional"></textarea></label>
+      </section>
+
+      <!-- Contextual link to the matching tool on cleanor.app (advanced types only) -->
+      <a id="toolLink" class="tool-link" target="_blank" rel="noopener" hidden></a>
+
+      <!-- Templates -->
+      <div class="tpl-row" id="templates" aria-label="Style templates"></div>
+
+      <!-- Appearance -->
+      <details class="panel" id="appearance">
+        <summary>Customize</summary>
+        <div class="panel-body">
+          <div class="ctl-row">
+            <span class="label">Fill</span>
+            <div class="seg seg-sm" id="fillSeg">
+              <button class="seg-btn is-active" data-fill="solid" type="button">Solid</button>
+              <button class="seg-btn" data-fill="gradient" type="button">Gradient</button>
+            </div>
+          </div>
+
+          <div class="ctl-row" id="solidRow">
+            <span class="label">Color</span>
+            <div class="swatches" id="fgSwatches">
+              <button class="sw" style="--c:#000000" data-c="#000000" type="button" aria-label="Black"></button>
+              <button class="sw" style="--c:#4576fd" data-c="#4576fd" type="button" aria-label="Cleanor blue"></button>
+              <button class="sw" style="--c:#12b886" data-c="#12b886" type="button" aria-label="Green"></button>
+              <button class="sw" style="--c:#e5484d" data-c="#e5484d" type="button" aria-label="Red"></button>
+              <button class="sw" style="--c:#7c3aed" data-c="#7c3aed" type="button" aria-label="Purple"></button>
+            </div>
+            <input id="fgColor" type="color" value="#000000" aria-label="Custom color" />
+          </div>
+
+          <div class="ctl-row" id="gradRow" hidden>
+            <span class="label">Gradient</span>
+            <input id="gradFrom" type="color" value="#4576fd" aria-label="Gradient start" />
+            <input id="gradTo" type="color" value="#2f55d4" aria-label="Gradient end" />
+            <input id="gradAngle" type="range" min="0" max="360" step="15" value="45" aria-label="Gradient angle" />
+          </div>
+
+          <div class="ctl-row">
+            <span class="label">Background</span>
+            <div class="swatches" id="bgSwatches">
+              <button class="sw" style="--c:#ffffff" data-c="#ffffff" type="button" aria-label="White"></button>
+              <button class="sw" style="--c:#f6f8fc" data-c="#f6f8fc" type="button" aria-label="Light grey"></button>
+              <button class="sw" style="--c:#eef3ff" data-c="#eef3ff" type="button" aria-label="Light blue"></button>
+              <button class="sw" style="--c:#fff7ed" data-c="#fff7ed" type="button" aria-label="Cream"></button>
+            </div>
+            <input id="bgColor" type="color" value="#ffffff" aria-label="Custom background" />
+          </div>
+
+          <div class="ctl-row">
+            <span class="label">Modules</span>
+            <div class="seg seg-sm" id="styleSeg">
+              <button class="seg-btn is-active" data-style="square" type="button">Square</button>
+              <button class="seg-btn" data-style="rounded" type="button">Rounded</button>
+              <button class="seg-btn" data-style="dots" type="button">Dots</button>
+            </div>
+          </div>
+
+          <div class="ctl-row">
+            <span class="label">Eyes</span>
+            <div class="seg seg-sm" id="eyeSeg">
+              <button class="seg-btn is-active" data-eye="square" type="button">Square</button>
+              <button class="seg-btn" data-eye="rounded" type="button">Rounded</button>
+            </div>
+          </div>
+
+          <div class="ctl-row">
+            <span class="label">Logo</span>
+            <button id="logoAdd" class="mini" type="button">Add image…</button>
+            <span id="logoName" class="logo-name" hidden></span>
+            <button id="logoRemove" class="mini danger" type="button" hidden>Remove</button>
+            <input id="logoFile" type="file" accept="image/*" hidden />
+          </div>
+
+          <details class="sub">
+            <summary>Advanced</summary>
+            <div class="controls">
+              <label class="ctl"><span>Error correction</span>
+                <select id="ecc">
+                  <option value="L">Low (7%)</option>
+                  <option value="M" selected>Medium (15%)</option>
+                  <option value="Q">Quartile (25%)</option>
+                  <option value="H">High (30%)</option>
+                </select></label>
+              <label class="ctl"><span>Size <b id="sizeVal">512</b> px</span>
+                <input id="size" type="range" min="128" max="1024" step="64" value="512" /></label>
+            </div>
+          </details>
+        </div>
+      </details>
+
+      <div class="actions">
+        <button id="download" class="primary" type="button">Download PNG</button>
+        <div class="actions-row">
+          <button id="downloadSvg" class="ghost" type="button">SVG</button>
+          <button id="copy" class="ghost" type="button">Copy</button>
+          <button id="print" class="ghost" type="button">Print</button>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span class="privacy">🔒 Generated on your device.</span>
+      <a id="siteLink" href="https://cleanor.app/tools/qr-code-generator" target="_blank" rel="noopener">More tools →</a>
+    </footer>
+
+    <div id="toast" class="toast" hidden></div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,6 @@
+.DS_Store
+*.pem
+*.crx
+*.zip
+firebase-debug.log
+node_modules/
