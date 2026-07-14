@@ -42,7 +42,15 @@ chrome.runtime.onInstalled.addListener((details) => {
 chrome.runtime.onStartup.addListener(buildMenu);
 
 // Re-registered on every service-worker wake; the call is idempotent.
-chrome.runtime.setUninstallURL(siteUrl('/support', 'uninstall'));
+// Where an uninstall goes: a one-question survey, not the support page. `ext` is how we know
+// which extension was removed (one survey serves the whole portfolio) and `v` is the version
+// they had, which is the difference between "it is broken" and "it was broken, in 1.0.0".
+chrome.runtime.setUninstallURL(
+  siteUrl(
+    `/uninstall?ext=qr-code-generator&v=${chrome.runtime.getManifest().version}`,
+    'uninstall',
+  ),
+);
 
 async function openWithPayload(text, label) {
   await chrome.storage.local.set({ [PAYLOAD_KEY]: { text, label, ts: Date.now() } });

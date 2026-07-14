@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Cleanor QR Code Generator: Page, Link & Text to QR",
-  "version": "0.1.0",
-  "description": "Make a QR code for the current page, any link, or text. Scan it with your phone. 100% on your device, nothing uploaded.",
+  "name": "QR Code Generator: Page, Wi-Fi, Contact & Link",
+  "version": "0.1.3",
+  "description": "A QR code for this page, a link, your Wi-Fi, a contact or an event. Scan it with a phone. On device, nothing uploaded.",
   "icons": {
     "16": "icons/icon-16.png",
     "32": "icons/icon-32.png",
@@ -23,7 +23,12 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": ["contextMenus", "activeTab", "clipboardWrite", "storage"],
+  "permissions": [
+    "contextMenus",
+    "activeTab",
+    "clipboardWrite",
+    "storage"
+  ],
   "commands": {
     "_execute_action": {
       "suggested_key": {
