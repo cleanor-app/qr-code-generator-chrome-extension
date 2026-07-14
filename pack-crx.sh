@@ -28,7 +28,7 @@ echo "✓ zip:  $ROOT/cleanor-qr-extension.zip"
 [[ "${1:-}" == "--zip-only" ]] && exit 0
 
 # --- 2) signed CRX (optional; only once a signing key exists) ----------------
-KEY="${CLEANOR_QR_CRX_KEY:-$HOME/Developer/Web/cleanor-qr-extension-signing/cleanor-qr-ext.pem}"
+KEY="${CLEANOR_QR_CRX_KEY:-$HOME/Developer/Web/Chrome/cleanor-qr-extension-signing/cleanor-qr-ext.pem}"
 CHROME="${CHROME_BIN:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
 
 if [[ ! -f "$KEY" ]]; then
